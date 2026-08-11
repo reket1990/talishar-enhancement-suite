@@ -1,4 +1,5 @@
-// Content script: inject CSS rules gated by the popup's enable toggle.
+// Content script (isolated world): injects CSS and mirrors the enable state
+// onto a <html> dataset attribute so page-hook.js (MAIN world) can respect it.
 const STYLE_ID = "tes-injected-styles";
 const CSS = `
   /* Hide "Support Us!" button in the header (NavLink to /premium). */
@@ -20,15 +21,23 @@ function removeStyles() {
   document.getElementById(STYLE_ID)?.remove();
 }
 
-// Fast path: assume enabled (the default). Verify against storage next tick
-// and remove styles if the user has toggled the suite off.
+function setEnabledMarker(enabled) {
+  document.documentElement.dataset.tesEnabled = enabled ? "true" : "false";
+}
+
+// Optimistic default: enabled. Adjust once storage resolves.
+setEnabledMarker(true);
 injectStyles();
+
 chrome.storage.local.get("enabled").then(({ enabled = true }) => {
+  setEnabledMarker(enabled);
   if (!enabled) removeStyles();
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local" || !("enabled" in changes)) return;
-  if (changes.enabled.newValue === false) removeStyles();
-  else injectStyles();
+  const enabled = changes.enabled.newValue !== false;
+  setEnabledMarker(enabled);
+  if (enabled) injectStyles();
+  else removeStyles();
 });

@@ -25,6 +25,12 @@
       "matches": ["https://talishar.net/*", "https://*.talishar.net/*"],
       "js": ["content.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["https://talishar.net/*", "https://*.talishar.net/*"],
+      "js": ["page-hook.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
     }
   ],
   "permissions": ["storage"],
