@@ -16,6 +16,6 @@ function renderStatus() {
 })();
 
 toggle.addEventListener("change", () => {
-  chrome.storage.local.set({ enabled: toggle.checked });
   renderStatus();
+  chrome.storage.local.set({ enabled: toggle.checked });
 });
