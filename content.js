@@ -7,6 +7,10 @@ const CSS = `
 
   /* Hide "Support us on Metafy" buttons wherever they appear. */
   a[href*="metafy.gg"] { display: none !important; }
+
+  /* Hide the Rust Counter panel. Matches the .panel root via its stable
+     grandchild #rust-counter-tooltip (panel > helpWrapper span > tooltip). */
+  div:has(> * > #rust-counter-tooltip) { display: none !important; }
 `;
 
 function injectStyles() {
