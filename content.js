@@ -11,6 +11,13 @@ const CSS = `
   /* Hide the Rust Counter panel. Matches the .panel root via its stable
      grandchild #rust-counter-tooltip (panel > helpWrapper span > tooltip). */
   div:has(> * > #rust-counter-tooltip) { display: none !important; }
+
+  /* Hide the "Ad Blocker Detected" popup. Structural signature: container
+     div has a child div containing both a Metafy link inside a <p> and a
+     dismiss <button> — unique to AdBlockingRecovery in Talishar-FE. */
+  div:has(> div > p > a[href*="metafy.gg"]):has(> div > button) {
+    display: none !important;
+  }
 `;
 
 function injectStyles() {
